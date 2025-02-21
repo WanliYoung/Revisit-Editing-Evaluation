@@ -8,6 +8,10 @@ This repository hosts the code and data for the paper: **The Mirage of Model Edi
 
 - **Environment**: `requirements.txt` (Please use Python 3.9+ for this repository)
 
+  ```shell
+  pip install -r requirements.txt
+  ```
+
 - **Large Language Models to Edit**: Download the LLMs you want to edit from [Hugging Face](https://huggingface.co/) and put them in `hugging_cache/`
 
 - **Datasets**: The data of QAEdit, ZsRE, and COUNTERFACT are provided in [Google Drive](https://drive.google.com/drive/folders/1w9r7CL_a9k3HiorfSvE-RiShHvvrshoy?usp=drive_link). Download the data you need and put them in `data/`
