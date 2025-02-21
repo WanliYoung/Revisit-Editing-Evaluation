@@ -39,6 +39,12 @@ class MEMITHyperParams(HyperParams):
     model_name: str
     stats_dir: str
 
+    # evaluation
+    evaluation_framework: str
+    context_type: str
+    metric_type: str
+    api_key: str
+
     max_length: int = 40
     batch_size: int = 1
     model_parallel: bool = False

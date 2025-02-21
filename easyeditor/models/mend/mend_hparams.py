@@ -69,6 +69,12 @@ class MENDHyperParams(HyperParams):
     model_name: str
     device: int
 
+    # evaluation
+    evaluation_framework: str
+    context_type: str
+    metric_type: str
+    api_key: str
+
     batch_size: int = 1
     max_length: int = 40
     max_output_length: Optional[int] = None
