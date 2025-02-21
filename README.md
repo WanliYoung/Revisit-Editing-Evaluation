@@ -57,7 +57,7 @@ api_key: "xxxxx"  # Openai api key for llm judge (GPT-4o-mini)
 The `exact_match` option primarily serves as an alternative for users who do not provide an OpenAI API key. Regardless of which metric calculation method is used, we will report the generated content for the corresponding fields of each sample. After editing is completed, users can extract these relevant fields and perform `llm_ judge` evaluations.
 
 ```json
-'post': {'rewrite_acc': 0.0, 'rewrite_gen_content': "Stone's Corner (now Unionville) 1 1 1831 1831 Stone's Corner (now Unionville) Original name of Forthton 204", 'locality': {'neighborhood_acc': [1.0]}, 'rephrase_acc': 0.0, 'rephrase_gen_content': "Stone's Corner Stone's Corner 1831 1831 12 10 100 "}
+{'post': {'rewrite_acc': 0.0, 'rewrite_gen_content': "Stone's Corner (now Unionville) 1 1 1831 1831 Stone's Corner (now Unionville) Original name of Forthton 204", 'locality': {'neighborhood_acc': [1.0]}, 'rephrase_acc': 0.0, 'rephrase_gen_content': "Stone's Corner Stone's Corner 1831 1831 12 10 100 "}}
 ```
 
 
@@ -91,7 +91,7 @@ The program will automatically report the editing performance for each sample:
 
 We present editing results under traditional editing evaluation (**Edit.**) and real-world evaluation (**Real.**) across various editing methods, LLMs, and datasets.
 
-<img src="/Users/wanli/Library/Application Support/typora-user-images/image-20250220234018159.png" alt="image-20250220234018159" style="zoom:50%;" />
+<img src="./figs/Results.png" alt="image-20250220234018159" style="zoom:50%;" />
 
 **We will continue to update and share more evaluation results for additional LLMs and editing methods!**
 
