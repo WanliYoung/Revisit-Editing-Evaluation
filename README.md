@@ -38,11 +38,7 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
      model_name: "meta-llama/Llama-2-7b"
      ```
 
-- **Datasets**: The data of **QAEdit**, [ZsRE](https://github.com/nicola-decao/KnowledgeEditor), and [COUNTERFACT](https://rome.baulab.info) are provided in [Google Drive](https://drive.google.com/drive/folders/1w9r7CL_a9k3HiorfSvE-RiShHvvrshoy?usp=drive_link). Execute `sh download_data.sh` will download the data and put them in `data/`:
-
-  ```shell
-  sh download_data.sh
-  ```
+- **Datasets**: The data of **QAEdit**, [ZsRE](https://github.com/nicola-decao/KnowledgeEditor), and [COUNTERFACT](https://rome.baulab.info) are provided in `data/`
 
 - **Stats for ROME and MEMIT**: 
 
@@ -64,7 +60,7 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
 
   2. **Calculate Stats Locally** (Time-Consuming)
 
-     The program can also automatically calculate the stats required for them locally. However, the process is very time-consuming.
+     If you do not provide the required stats files but set `mom2_adjustment` to `True`, the program will automatically calculate the stats required for them locally. However, the process is very time-consuming.
 
   3. **Quick Testing Without Stats Files** (Approximate Results)
   
@@ -104,7 +100,7 @@ python pretrain_mend.py
   python edit_cf_zsre.py
   ```
 
-- You can set `sequential_edit=True` in these two files to perform sequential editing
+- You can set `sequential_edit=True` in these two files to perform sequential editing, i.e., sample-wise sequential editing — editing one sample at a time continuously.
 
   ```python
   metrics, edited_model, _ = editor.edit(
@@ -113,12 +109,18 @@ python pretrain_mend.py
   )
   ```
 
-- For batch editing, you can change `editor.edit` to `editor.batch_edit` and delete the `sequential_edit` field
+- For batch editing, you can change `editor.edit` to `editor.batch_edit` and delete the `sequential_edit` field. `batch_edit` refers to mini-batch setting, i.e., continuously editing each batch of edits.
 
   ```python
   metrics, edited_model, _ = editor.batch_edit(
       # ......
   )
+  ```
+  
+  You can adjust the `batch_size` in corresponding configuration file, e.g., `/hparams/FT/llama-7b.yaml`
+  
+  ```yaml
+  batch_size: 100
   ```
 
 
@@ -145,6 +147,8 @@ The `exact_match` option primarily serves as an alternative for users who do not
 'post': {'rewrite_acc': 0.0, 'rewrite_gen_content': "Stone's Corner (now Unionville) 1 1 1831 1831 Stone's Corner (now Unionville) Original name of Forthton 204", 
 'rephrase_acc': 0.0, 'rephrase_gen_content': "Stone's Corner Stone's Corner 1831 1831 12 10 100 "}
 ```
+
+(Note: `rewrite_acc` and `rephrase_acc` denote the *reliability* and *generalization* metrics, and `rewrite_gen_content` and `rephrase_gen_content` denote corresponding generated content for metric calculation.)
 
 
 
