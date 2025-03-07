@@ -17,7 +17,7 @@ norm_constraint: 5e-4
 # In our survey paper(https://arxiv.org/abs/2401.01286) 
 # "prompt_last" corresponds to the results of FT-L.
 # "target_new" corresponds to the results of FT-M.
-objective_optimization: "prompt_last"
+objective_optimization: "target_new"
 rewrite_module_tmp: "transformer.h.{}.mlp.c_proj"
 layer_module_tmp: "transformer.h.{}"
 mlp_module_tmp: "transformer.h.{}.mlp"

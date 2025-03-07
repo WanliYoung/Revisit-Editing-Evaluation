@@ -10,7 +10,7 @@ lr: 5e-4
 weight_decay: 0
 kl_factor: 0
 norm_constraint: false
-objective_optimization: "promptz_last"
+objective_optimization: "target_new"
 # In our survey paper(https://arxiv.org/abs/2401.01286) 
 # "prompt_last" corresponds to the results of FT-L.
 # "target_new" corresponds to the results of FT-M.
