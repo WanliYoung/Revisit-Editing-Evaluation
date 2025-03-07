@@ -47,7 +47,7 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
      model_name: "meta-llama/Llama-2-7b"
      ```
 
-- **Datasets**: The data of **QAEdit**, [ZsRE](https://github.com/nicola-decao/KnowledgeEditor), and [COUNTERFACT](https://rome.baulab.info) are provided in `data/`
+- **Datasets**: The data of **QAEdit**, [ZsRE](https://github.com/nicola-decao/KnowledgeEditor), and [COUNTERFACT](https://rome.baulab.info) are provided in `./data/`
 
 - **Stats for ROME and MEMIT**: 
 
