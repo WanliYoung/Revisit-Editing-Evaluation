@@ -12,28 +12,29 @@ import string
 import regex
 import time
 from openai import OpenAI
+from transformers import T5ForConditionalGeneration
 
 
 def normalize_answer(s):
-	def remove_articles(text):
-		return regex.sub(r'\b(a|an|the)\b', ' ', text)
+    def remove_articles(text):
+        return regex.sub(r'\b(a|an|the)\b', ' ', text)
 
-	def white_space_fix(text):
-		return ' '.join(text.split())
+    def white_space_fix(text):
+        return ' '.join(text.split())
 
-	def remove_punc(text):
-		exclude = set(string.punctuation)
-		return ''.join(ch for ch in text if ch not in exclude)
+    def remove_punc(text):
+        exclude = set(string.punctuation)
+        return ''.join(ch for ch in text if ch not in exclude)
 
-	def lower(text):
-		return text.lower()
+    def lower(text):
+        return text.lower()
 
-	return white_space_fix(remove_articles(remove_punc(lower(s))))
+    return white_space_fix(remove_articles(remove_punc(lower(s))))
 
 def exact_match_score(prediction, ground_truth):
-	return normalize_answer(prediction) == normalize_answer(ground_truth)
+    return normalize_answer(prediction) == normalize_answer(ground_truth)
 
-def llm_judge(question, prediction, ground_truth, hparams):
+def llm_judge(question, ground_truth, prediction, api_key):
     content_template = """
 Your job is to look at a question, a gold target, and a predicted answer, and then assign a grade of either ["CORRECT", "INCORRECT"].
 
@@ -82,7 +83,7 @@ Just return the letters "A" or "B", with no text around it.
     )
 
     client = OpenAI(
-        api_key=hparams.api_key,
+        api_key=api_key,
     )
 
     completion = client.chat.completions.create(
@@ -98,15 +99,18 @@ Just return the letters "A" or "B", with no text around it.
     time.sleep(1) # avoid high rate of request
     return llm_score
 
-def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locality=False, context_type=None, metric_type="exact_match"):
+def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locality=False):
     # input
-    if context_type == "qa_inst":
-        inst_template = "Please answer the question:\n\nQ: {question}\nA:"
-        input_prompt = inst_template.format(question=prompt)
-    elif context_type == "chat_temp":
-        chat_template = "<s>[INST] <<SYS>>\nYou are a helpful, respectful and honest assistant.\n<</SYS>>\n\n{user_prompt} [/INST]</s>"
-        input_prompt = chat_template.format(user_prompt=prompt)
-    else:
+    if hasattr(hparams, 'context_type'):
+        if hparams.context_type == "qa_inst":
+            inst_template = "Please answer the question:\n\nQ: {question}\nA:"
+            input_prompt = inst_template.format(question=prompt)
+        elif hparams.context_type == "chat_temp":
+            chat_template = "<s>[INST] <<SYS>>\nYou are a helpful, respectful and honest assistant.\n<</SYS>>\n\n{user_prompt} [/INST]</s>"
+            input_prompt = chat_template.format(user_prompt=prompt)
+        else: 
+            input_prompt = prompt  # default setting: question only
+    else: 
         input_prompt = prompt  # default setting: question only
     # generation & truncation
     prompt_tok = tok(
@@ -124,9 +128,12 @@ def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locali
         use_cache=False,
     )
     # decode and process
-    trunc_gen_tokens = gen_tokens[0][prompt_tok['input_ids'].shape[1]:]  # get generated tokens
+    if isinstance(model, T5ForConditionalGeneration):
+        trunc_gen_tokens = gen_tokens[0]  # encoder-decoder model only provied generated content after prompt
+    else:
+        trunc_gen_tokens = gen_tokens[0][prompt_tok['input_ids'].shape[1]:]  # decoder-only model provied generated content containing prompt
     if locality:
-        ans = trunc_gen_tokens.squeeze().detach().cpu().numpy().tolist()
+        ans = trunc_gen_tokens.detach().cpu().numpy().tolist()
         return ans
     else:
         gen_content = tok.decode(trunc_gen_tokens)
@@ -135,15 +142,13 @@ def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locali
             if gen_content.endswith(suffix):
                 gen_content = gen_content.rstrip(suffix)
         # metric calculation
-        if metric_type == "exact_match":
-            # use exact match to assess
-            EM_Score = float(exact_match_score(gen_content, target))
-            return gen_content, EM_Score
-        elif metric_type == "llm_judge":
-            LLM_Score = llm_judge(prompt, gen_content, target, hparams)
-            return gen_content, LLM_Score
+        if hasattr(hparams, 'api_key') and hparams.api_key:
+            LLM_Score = llm_judge(prompt, target, gen_content, hparams.api_key)
+            return LLM_Score, gen_content
         else:
-            raise ValueError("metric type must in: [exact_match, llm_judge]")
+            # the user do not provide api key, using exact match as an alternative
+            EM_Score = float(exact_match_score(gen_content, target))
+            return EM_Score, gen_content
 
 def test_batch_prediction_acc(model, tok, hparams, prompts, target, device, locality=False):
     prompt_tok = tok(

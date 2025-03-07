@@ -31,12 +31,3 @@ model_parallel: False
 # for save and load
 # save_path: "./wise_checkpoint/wise.pt"
 # load_path: "./wise_checkpoint/wise.pt"
-
-# evaluation
-# "traditional" for the evaluation of EasyEdit: context-free, teacher-forcing, ground truth length, match ratio
-# "real-world" for the evaluation in our paper: context-guided, autoregressive decoding, natural stop criteria, LLM-as-a-Judge
-evaluation_framework: "real-world"  
-# for real-world evaluation in our paper, you need to set
-context_type: "question-only"  # "qa_inst" for QA task instruction; "chat_temp" for chat model; default config is question-only
-metric_type: "exact_match"  # "exact_match" or "llm_judge"
-api_key: "xxxxx"  # Openai api key for llm judge (GPT-4o-mini)

@@ -4,6 +4,7 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
 
 ### Table of Contents
 
+- [📢 News](#📢 News)
 - [Requirements](#requirements)
 - [Editing](#editing)
 - [Evaluations](#evaluations)
@@ -11,6 +12,14 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
 - [Results](#results)
 - [Citation](#citation)
 - [Acknowledgment](#acknowledgment)
+
+
+
+### 📢 News
+
+- 2025-03-04, our newly proposed **real-world evaluation framework** for model editing has been integrated into [EasyEdit](https://github.com/zjunlp/EasyEdit). You can also refer to it for a comprehensive evaluation of various editing techniques and datastes. 
+
+
 
 ### Requirements:
 
@@ -24,9 +33,9 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
 
   You have three options to load LLMs for editing:
 
-  1. Download the LLMs you want to edit from [Hugging Face](https://huggingface.co/) and put them in `hugging_cache/` 
+  1. Download the LLMs you want to edit from [Hugging Face](https://huggingface.co/) and put them in `./hugging_cache/` 
 
-  2. Specify the path to your existing LLMs in the configuration files, e.g.,  `/hparams/FT/llama-7b.yaml`:
+  2. Specify the path to your existing LLMs in the configuration files, e.g.,  `./hparams/FT/llama-7b.yaml`:
 
      ```yaml
      model_name: "your/path/to/LLMs"
@@ -46,13 +55,13 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
 
   1. **Use Precomputed Stats Files** (Recommended for Best Results)
 
-     (a) `download_stats.sh` will download the required stats files from [stats for llama2-7b](https://drive.google.com/drive/folders/1IGt7NNV-OxXqIljjr02_k0dDY50Z5N_E) (Provided by [EasyEdit](https://github.com/zjunlp/EasyEdit). And we will upload the stats files for llama3-8b and mistral-7b as soon as possible.) and put the `wikipedia_stats` directory into corresponding local directory `data/stats/{model_name}/wikipedia_stats`
+     (a) `download_stats.sh` will download the required stats files from [stats for llama2-7b](https://drive.google.com/drive/folders/1IGt7NNV-OxXqIljjr02_k0dDY50Z5N_E) (Provided by [EasyEdit](https://github.com/zjunlp/EasyEdit). And we will upload the stats files for llama3-8b and mistral-7b as soon as possible.) and put the `wikipedia_stats` directory into corresponding local directory `./data/stats/{model_name}/wikipedia_stats`
 
      ```shell
      sh download_stats.sh
      ```
 
-     (b) Set `mom2_adjustment` to `True` in corresponding configuration file, e.g., `/hparams/ROME/llama-7b.yaml`
+     (b) Set `mom2_adjustment` to `True` in corresponding configuration file, e.g., `./hparams/ROME/llama-7b.yaml`
 
      ```yaml
      mom2_adjustment: true
@@ -66,7 +75,7 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
   
      If you want to quickly test the effects without using stats files, you can skip downloading or calculating them. 
   
-     Set `mom2_adjustment` to `false` in the corresponding configuration file, e.g., `/hparams/ROME/llama-7b.yaml` (which is also the default setting). 
+     Set `mom2_adjustment` to `false` in the corresponding configuration file, e.g., `./hparams/ROME/llama-7b.yaml` (which is also the default setting). 
   
      ```yaml
      mom2_adjustment: false
@@ -88,40 +97,32 @@ python pretrain_mend.py
 
 #### Single & Sequential & Batch Editing
 
-- If you want to perform single editing on **QAEdit**, you can execute `edit.py`
+- **Single Editing:** 
 
   ```shell
-  python edit.py
+  python edit.py --editing_method FT --hparams_dir ./hparams/FT/llama-7b.yaml --data_path ./data/QAEdit.json --datatype qaedit --ds_size 100
   ```
 
-- If you want to perform single editing on ZsRE and COUNTERFACT, you can refer to `edit_cf_zsre.py`
+- **Sequential Editing:** 
 
   ```shell
-  python edit_cf_zsre.py
+  python edit.py --editing_method FT --hparams_dir ./hparams/FT/llama-7b.yaml --data_path ./data/QAEdit.json --datatype qaedit --ds_size 100 --sequential_edit True
   ```
+  (Note: the sequential editing refers to **sample-wise sequential editing** — editing one sample at a time continuously.)
 
-- You can set `sequential_edit=True` in these two files to perform sequential editing, i.e., sample-wise sequential editing — editing one sample at a time continuously.
+- **Batch Editing:** 
 
-  ```python
-  metrics, edited_model, _ = editor.edit(
-      # ......
-      sequential_edit=True,
-  )
+  ```shell
+  python edit.py --editing_method FT --hparams_dir ./hparams/FT/llama-7b.yaml --data_path ./data/QAEdit.json --datatype qaedit --ds_size 100 --batch_edit True
   ```
+  (Note: the batch editing refers to **mini-batch setting** — continuously editing each batch of edits.)
 
-- For batch editing, you can change `editor.edit` to `editor.batch_edit` and delete the `sequential_edit` field. `batch_edit` refers to mini-batch setting, i.e., continuously editing each batch of edits.
+  You can adjust the `batch_size` in corresponding configuration file, e.g., `./hparams/FT/llama-7b.yaml`
 
-  ```python
-  metrics, edited_model, _ = editor.batch_edit(
-      # ......
-  )
-  ```
-  
-  You can adjust the `batch_size` in corresponding configuration file, e.g., `/hparams/FT/llama-7b.yaml`
-  
   ```yaml
-  batch_size: 100
+  batch_size: 10
   ```
+
 
 
 
@@ -129,19 +130,21 @@ python pretrain_mend.py
 
 We provide **tradition editing evaluation** and **real-world evaluation** of our paper in this repository.
 
-You can specify the evaluation framework in the configuration files, e.g., `hparams/FT/llama-7b.yaml`.
+For aforementioned commands, the default configurations are
 
-The default configuration is:
-
-```yaml
-evaluation_framework: "real-world"     # "real-world" or "traditional"
-# For real-world evaluation in our paper, you need to set
-context_type:         "question-only"  # "qa_inst" for QA task instruction; "chat_temp" for chat model; default is question-only
-metric_type:          "exact_match"    # "exact_match" or "llm_judge"
-api_key:              "xxxxx"          # OpenAI API key for LLM judge (GPT-4o-mini)
+```shell
+python edit.py --editing_method FT --hparams_dir ./hparams/FT/llama-7b.yaml --data_path ./data/QAEdit.json --datatype qaedit --ds_size 100  # --evaluation_type real-world --context_type question-only --api_key None
 ```
 
-The `exact_match` option primarily serves as an alternative for users who do not provide an OpenAI API key. Regardless of which metric calculation method is used, we will report the generated content for the corresponding fields of each sample. After editing is completed, you can extract these relevant fields and perform `llm_ judge` evaluations.
+You can specify `evaluation framework`,  `context_type`, and `api_key` in the commands:
+
+```markdown
+--evaluation_type: `real-world` or `traditional`
+--context_type: default configuration is `question-only`; `qa_inst` for QA task instruction; `chat_temp` for chat model
+--api_key: `xxx` (Your api_key for LLM-as-a-Judge (GPT-4o-mini). If you cannot provide an api_key, we will default to provide exact match as an alternative.)
+```
+
+We will report the **generated content** for the corresponding fields of each sample. After editing is completed, you can extract these relevant fields and then perform LLM-as-a-Judge evaluations.
 
 ```txt
 'post': {'rewrite_acc': 0.0, 'rewrite_gen_content': "Stone's Corner (now Unionville) 1 1 1831 1831 Stone's Corner (now Unionville) Original name of Forthton 204", 
@@ -168,7 +171,7 @@ We present editing results under traditional editing evaluation (**Edit.**) and 
 
 <img src="./figs/Results.png" alt="image-20250220234018159" style="zoom:50%;" />
 
-**We will continue to update and share more evaluation results for additional LLMs and editing methods!**
+**We will continue to update and share more evaluation results of additional LLMs and editing methods!**
 
 
 

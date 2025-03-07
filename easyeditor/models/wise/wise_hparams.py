@@ -32,12 +32,6 @@ class WISEHyperParams(HyperParams):
     alg_name: str
     model_name: str
 
-    # evaluation
-    evaluation_framework: str
-    context_type: str
-    metric_type: str
-    api_key: str
-
     # Defaults
     batch_size: int = 1
     max_length: int = 30

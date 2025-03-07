@@ -27,12 +27,6 @@ class FTHyperParams(HyperParams):
     model_name: str
     objective_optimization: str
 
-    # evaluation
-    evaluation_framework: str
-    context_type: str
-    metric_type: str
-    api_key: str
-
     # Defaults
     batch_size: int = 64
     max_length: int = 40
