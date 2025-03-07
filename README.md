@@ -136,7 +136,7 @@ For aforementioned commands, the default configurations are
 python edit.py --editing_method FT --hparams_dir ./hparams/FT/llama-7b.yaml --data_path ./data/QAEdit.json --datatype qaedit --ds_size 100  # --evaluation_type real-world --context_type question-only --api_key None
 ```
 
-You can specify `evaluation framework`,  `context_type`, and `api_key` in the commands:
+You can specify `evaluation_type`,  `context_type`, and `api_key` in the commands:
 
 ```markdown
 --evaluation_type: `real-world` or `traditional`
