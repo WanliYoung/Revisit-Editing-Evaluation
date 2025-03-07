@@ -133,7 +133,7 @@ We provide **tradition editing evaluation** and **real-world evaluation** of our
 For aforementioned commands, the default configurations are
 
 ```shell
-python edit.py # --evaluation_type real-world --context_type question-only --api_key None
+python edit.py ... # --evaluation_type real-world --context_type question-only --api_key None
 ```
 
 You can specify `evaluation_type`,  `context_type`, and `api_key` in the commands:
