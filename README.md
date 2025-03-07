@@ -17,7 +17,7 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
 
 ### 📢News
 
-- 2025-03-04, our newly proposed **real-world evaluation framework** for model editing has been integrated into [EasyEdit](https://github.com/zjunlp/EasyEdit). You can also refer to it for a comprehensive evaluation of various editing techniques and datastes. 
+- 2025-03-04, our newly proposed **real-world evaluation framework** for model editing has been integrated into [EasyEdit](https://github.com/zjunlp/EasyEdit). You can also refer to it for a comprehensive evaluation of various editing techniques and datastes. Special thanks to the recognition and support of [EasyEdit](https://github.com/zjunlp/EasyEdit).
 
 
 
