@@ -121,7 +121,7 @@ def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locali
         input_ids=prompt_tok['input_ids'],
         attention_mask=prompt_tok['attention_mask'],
         max_new_tokens=50,
-        stop_strings=[".", "\n", "</s>", "<|endoftext|>"],
+        stop_strings=[".", "\n", tok.eos_token],
         tokenizer=tok,
         pad_token_id=tok.eos_token_id,
         do_sample=False,
@@ -137,10 +137,10 @@ def test_prediction_acc_real(model, tok, hparams, prompt, target, device, locali
         return ans
     else:
         gen_content = tok.decode(trunc_gen_tokens)
-        suffixes_to_remove = [".", "\n", "</s>", "<|endoftext|>"]
+        suffixes_to_remove = [".", "\n", tok.eos_token]
         for suffix in suffixes_to_remove:
             if gen_content.endswith(suffix):
-                gen_content = gen_content.rstrip(suffix)
+                gen_content = gen_content[:-len(suffix)]
         # metric calculation
         if hasattr(hparams, 'api_key') and hparams.api_key:
             LLM_Score = llm_judge(prompt, target, gen_content, hparams.api_key)
