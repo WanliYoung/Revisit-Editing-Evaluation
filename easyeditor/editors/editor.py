@@ -252,7 +252,7 @@ class BaseEditor:
             ans = all_metrics[i]['post']['locality']['neighborhood_output']
             label = all_metrics[i]['pre']['locality']['neighborhood_output']
 
-            if hasattr(self.hparams, 'evaluation_type') and self.hparams.evaluation_type == "real-world":
+            if hasattr(self.hparams, 'evaluation_type') and self.hparams.evaluation_type == "WILD":
                 all_metrics[i]['post']['locality']['neighborhood_acc'] = float(ans==label)
             else:
                 all_metrics[i]['post']['locality']['neighborhood_acc'] = np.mean(np.equal(ans, label))
@@ -349,7 +349,7 @@ class BaseEditor:
                 if 'locality' in all_metrics[idx]['post'].keys():
                     for locality_key in request['locality'].keys():
                         locality_result = []
-                        if hasattr(self.hparams, 'evaluation_type') and self.hparams.evaluation_type == "real-world":
+                        if hasattr(self.hparams, 'evaluation_type') and self.hparams.evaluation_type == "WILD":
                             locality_result.append(float(all_metrics[idx]['post']['locality'][f'{locality_key}_output']==all_metrics[idx]['pre']['locality'][f'{locality_key}_output']))
                         else:
                             for ans, label in zip(all_metrics[idx]['post']['locality'][f'{locality_key}_output'], all_metrics[idx]['pre']['locality'][f'{locality_key}_output']):
