@@ -159,9 +159,9 @@ We will report the **generated content** for the corresponding fields of each sa
 
 The program will automatically report the editing performance for each sample:
 
-- `rewrite_acc`: *reliability* in editing/real-world evaluation
-- `rephrase_acc`: *generalization* in editing/real-world evaluation
-- `neighborhood_acc`: *locality* in editing/real-world evaluation
+- `rewrite_acc`: *reliability* in synthetic/WILD evaluation
+- `rephrase_acc`: *generalization* in synthetic/WILD evaluation
+- `neighborhood_acc`: *locality* in synthetic/WILD evaluation
 
 
 
