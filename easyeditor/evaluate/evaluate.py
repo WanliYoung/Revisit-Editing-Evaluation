@@ -111,14 +111,14 @@ def compute_rewrite_or_rephrase_quality(
         key = 'rewrite'
     else:
         key = 'rephrase'
-    # using real-world evaluation: autoregressive decoding, natural stop criteria, LLM-as-a-Judge
-    if hasattr(hparams, 'evaluation_type') and hparams.evaluation_type == "real-world":
+    # using WILD evaluation: autoregressive decoding, natural stop criteria, LLM-as-a-Judge
+    if hasattr(hparams, 'evaluation_type') and hparams.evaluation_type == "WILD":
         acc, gen_content = test_prediction_acc_real(model, tok, hparams, prompt, target_new, device, locality=False)
         ret = {
             f"{key}_acc": acc,
             f"{key}_gen_content": gen_content
         }
-    else:  # traditional evaluation 
+    else:  # synthetic evaluation 
         if eval_metric == 'ppl':
             ppl = PPL(model, tok, prompt, target_new, device)
             ret = {
@@ -162,10 +162,10 @@ def compute_locality_quality(
     device,
 ) -> typing.Dict:
 
-    # using real-world evaluation
-    if hasattr(hparams, 'evaluation_type') and hparams.evaluation_type == "real-world":
+    # using WILD evaluation
+    if hasattr(hparams, 'evaluation_type') and hparams.evaluation_type == "WILD":
         loc_tokens = test_prediction_acc_real(model, tok, hparams, prompt, locality_ground_truth, device, locality=True)
-    else:  # traditional evaluation 
+    else:  # synthetic evaluation 
         if 't5' in model_name.lower():
             loc_tokens = test_seq2seq_batch_prediction_acc(model, tok, hparams, prompt, locality_ground_truth, device, locality=True)
         else:
