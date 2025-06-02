@@ -21,14 +21,24 @@ if __name__ == "__main__":
     parser.add_argument('--data_path', required=True, type=str)
     parser.add_argument('--datatype', default=True,type=str)
     parser.add_argument('--ds_size', default=10, type=int)
-    parser.add_argument('--sequential_edit', default=False, type=bool)
-    parser.add_argument('--batch_edit', default=False, type=bool)
-    parser.add_argument('--evaluation_type', default='real-world', type=str)
+    parser.add_argument('--sequential_edit', default=False, type=str)
+    parser.add_argument('--batch_edit', default=False, type=str)
+    parser.add_argument('--evaluation_type', default='WILD', type=str)
     parser.add_argument('--context_type', default='question-only', type=str)
     parser.add_argument('--api_key', default=None, type=str)
     parser.add_argument('--output_dir', default='./outputs', type=str)
 
     args = parser.parse_args()
+
+    if args.sequential_edit == "True" or args.sequential_edit == "true":
+        sequential_edit = True
+    else:
+        sequential_edit = False
+
+    if args.batch_edit == "True" or args.batch_edit == "true":
+        batch_edit = True
+    else:
+        batch_edit = False
 
     if args.editing_method == 'FT':
         editing_hparams = FTHyperParams
@@ -98,7 +108,7 @@ if __name__ == "__main__":
 
     editor = BaseEditor.from_hparams(hparams)
 
-    if args.batch_edit:
+    if batch_edit:
         metrics, edited_model, _ = editor.batch_edit(
             prompts=prompts,
             rephrase_prompts=rephrase_prompts,
@@ -115,7 +125,7 @@ if __name__ == "__main__":
             target_new=target_new,
             loc_prompts=loc_prompts,
             locality_inputs=locality_inputs,
-            sequential_edit=args.sequential_edit,
+            sequential_edit=sequential_edit,
         )
 
     with open(output_file, 'w') as f:
