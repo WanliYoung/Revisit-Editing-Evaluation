@@ -17,7 +17,9 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
 
 ### 📢News
 
-- 2025-03-04, our newly proposed **real-world evaluation framework** for model editing has been integrated into [EasyEdit](https://github.com/zjunlp/EasyEdit). You can also refer to it for a comprehensive evaluation of various editing techniques and datastes. Special thanks to the recognition and support of [EasyEdit](https://github.com/zjunlp/EasyEdit).
+- 2025-06-02, we have released our QAEdit benchmark on [Hugging Face](https://huggingface.co/datasets/WenDingY/QAEdit).
+- 2025-05-16, 🎉🎉 our paper ["The Mirage of Model Editing: Revisiting Evaluation in the Wild"](https://arxiv.org/abs/2502.11177) has been accepted to ACL 2025 Main Conference.
+- 2025-03-04, our newly proposed **WILD evaluation framework** for model editing has been integrated into [EasyEdit](https://github.com/zjunlp/EasyEdit). You can also refer to it for a comprehensive evaluation of various editing techniques and datastes. Special thanks to the recognition and support of EasyEdit team.
 
 
 
@@ -47,7 +49,7 @@ This repository hosts the code and data for the paper: **[The Mirage of Model Ed
      model_name: "meta-llama/Llama-2-7b"
      ```
 
-- **Datasets**: The data of **QAEdit**, [ZsRE](https://github.com/nicola-decao/KnowledgeEditor), and [COUNTERFACT](https://rome.baulab.info) are provided in `./data/`
+- **Datasets**: The data of **[QAEdit](https://huggingface.co/datasets/WenDingY/QAEdit)**, [ZsRE](https://github.com/nicola-decao/KnowledgeEditor), and [COUNTERFACT](https://rome.baulab.info) are provided in `./data/`
 
 - **Stats for ROME and MEMIT**: 
 
@@ -124,22 +126,20 @@ python pretrain_mend.py
   ```
 
 
-
-
 ### Evaluations:
 
-We provide **tradition editing evaluation** and **real-world evaluation** of our paper in this repository.
+We provide **synthetic evaluation** and **WILD evaluation** of our paper in this repository.
 
 For aforementioned commands, the default configurations are
 
 ```shell
-python edit.py ... # --evaluation_type real-world --context_type question-only --api_key None
+python edit.py ... # --evaluation_type WILD --context_type question-only --api_key None
 ```
 
 You can specify `evaluation_type`,  `context_type`, and `api_key` in the commands:
 
 ```markdown
---evaluation_type: `real-world` or `traditional`
+--evaluation_type: `WILD` or `synthetic`
 --context_type: default configuration is `question-only`; `qa_inst` for QA task instruction; `chat_temp` for chat model
 --api_key: `xxx` (Your api_key for LLM-as-a-Judge (GPT-4o-mini). If you cannot provide an api_key, we will default to provide exact match as an alternative.)
 ```
@@ -167,9 +167,9 @@ The program will automatically report the editing performance for each sample:
 
 ### Results
 
-We present editing results under traditional editing evaluation (**Edit.**) and real-world evaluation (**Real.**) across various editing methods, LLMs, and datasets.
+We present editing results under synthetic evaluation (**syn.**) and WILD evaluation (**WILD**) across various editing methods, LLMs, and datasets.
 
-<img src="./figs/Results.png" alt="image-20250220234018159" style="zoom:50%;" />
+<img src="./figs/Results_CR.png" alt="image-20250220234018159" style="zoom:50%;" />
 
 **We will continue to update and share more evaluation results of additional LLMs and editing methods!**
 
