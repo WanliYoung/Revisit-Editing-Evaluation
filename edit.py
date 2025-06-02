@@ -93,7 +93,7 @@ if __name__ == "__main__":
     }
 
     hparams = editing_hparams.from_hparams(f'{args.hparams_dir}')
-    # specify real-world evaluation and provide the api key for LLM-as-a-Judge
+    # specify WILD evaluation and provide the api key for LLM-as-a-Judge
     hparams.evaluation_type = args.evaluation_type
     hparams.context_type = args.context_type
     hparams.api_key = args.api_key
