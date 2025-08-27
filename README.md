@@ -181,14 +181,29 @@ If you have any further questions, please feel free to contact us. And if you fi
 
 ```bibtex
 
-@misc{yang2025miragemodeleditingrevisiting,
-      title={The Mirage of Model Editing: Revisiting Evaluation in the Wild}, 
-      author={Wanli Yang and Fei Sun and Jiajun Tan and Xinyu Ma and Qi Cao and Dawei Yin and Huawei Shen and Xueqi Cheng},
-      year={2025},
-      eprint={2502.11177},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2502.11177}, 
+@inproceedings{yang-etal-2025-mirage,
+    title = "The Mirage of Model Editing: Revisiting Evaluation in the Wild",
+    author = "Yang, Wanli  and
+      Sun, Fei  and
+      Tan, Jiajun  and
+      Ma, Xinyu  and
+      Cao, Qi  and
+      Yin, Dawei  and
+      Shen, Huawei  and
+      Cheng, Xueqi",
+    editor = "Che, Wanxiang  and
+      Nabende, Joyce  and
+      Shutova, Ekaterina  and
+      Pilehvar, Mohammad Taher",
+    booktitle = "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    month = jul,
+    year = "2025",
+    address = "Vienna, Austria",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2025.acl-long.745/",
+    doi = "10.18653/v1/2025.acl-long.745",
+    pages = "15336--15354",
+    ISBN = "979-8-89176-251-0"
 }
 
 ```
